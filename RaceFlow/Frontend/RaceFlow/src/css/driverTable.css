@@ -81,6 +81,7 @@
 /* Driver Cell */
 .driver-cell {
     text-decoration: none;
+    justify-content: center;
 }
 
 .driver-cell a {

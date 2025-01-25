@@ -264,3 +264,9 @@ body {
     height: 40px;
   }
   
+  .weather-temp {
+    font-size: 1.25rem;
+    font-family: 'F1Font', sans-serif;
+    color: white;
+
+  }

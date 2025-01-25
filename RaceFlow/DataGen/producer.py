@@ -52,6 +52,11 @@ def select_tyre(weather):
 producer = create_kafka_producer([KAFKA_BROKER])
 
 # Haversine distance and other utility functions remain unchanged
+def calculate_race_time(base_start_time):
+    return time.time() - base_start_time
+    
+
+
 def calculate_time_gap(leader_progress, driver_progress, position_to_sector, velocities):
     """
     Calcula o gap de tempo entre o líder e um piloto específico.
@@ -125,10 +130,15 @@ def group_into_sectors(segments):
     sectors.append((current_type, start_index, len(segments) - 1))
     return sectors
 
-def generate_velocity_for_sector(sector_type):
+def generate_velocity_for_sector(sector_type, elapsed_time):
+    scaling_factor = min(1, 0.5 + (elapsed_time / 40))  # Slow start scaling factor, increases to 1 after 20 seconds
+
     if sector_type == "curve":
-        return random.uniform(150, 200)
-    return random.uniform(200, 350)
+        base_velocity = random.uniform(150, 200)
+    else:
+        base_velocity = random.uniform(200, 350)
+
+    return base_velocity * scaling_factor
 
 def adjust_tyre_temperatures(base_temp=100.0):
     return [
@@ -293,12 +303,16 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
     base_start_time = time.time()
     start_times = {
         driver_id: base_start_time + i * 0.5 for i, driver_id in enumerate(driver_ids)
+
     }
+    
 
     while True:
         if not race_running(url):
             time.sleep(1)
             continue
+
+        elapsed_time = calculate_race_time(base_start_time)
 
         for driver_id in driver_ids:
             
@@ -362,7 +376,7 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
                             sector_type = "straight"  # Default to straight if no sector found
 
                         # Generate velocity after exiting the pit lane
-                        velocity = generate_velocity_for_sector(sector_type)
+                        velocity = generate_velocity_for_sector(sector_type, base_start_time + calculate_race_time(base_start_time))
 
                         # Update lap count
                         car_positions[driver_id] = current_position
@@ -409,7 +423,7 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
                     break
 
             # Update position and velocity
-            velocity = generate_velocity_for_sector(sector_type)
+            velocity = generate_velocity_for_sector(sector_type, elapsed_time)
             velocity_buffers[driver_id].append(velocity)
 
             current_time = time.time()
@@ -441,6 +455,8 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
             # Check if entering pit lane
             if (COORDINATES[current_position] == PIT_ENTRY and not pitstop_info[driver_id]["in_pitstop"] and random.random() < 0.6):
                 pitstop_info[driver_id]["in_pitstop"] = True
+                velocity = 60  # Fixed velocity during pitstop
+
                 pitstop_info[driver_id]["start_time"] = time.time()
                 pitstop_info[driver_id]["duration"] = random.uniform(20, 30)  # Pitstop duration (seconds)
                 pitstop_info[driver_id]["lap"] = car_laps[driver_id]
@@ -460,7 +476,7 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
                     lap_time = current_time - last_lap_times[driver_id]
                     last_lap_times[driver_id] = current_time
                     try:
-                        producer.send(TOPIC_NAME_LAPTIMES, value={"driverID": driver_id, "lapTime": round(lap_time, 3)})
+                        producer.send(topic_laptimes, value={"driverID": driver_id, "lapTime": round(lap_time, 3)})
                         print("Driver ID: ", driver_id, " Lap Time: ", round(lap_time, 3))
                     except Exception as e:
                         print(f"Error sending lap time data: {e}")
@@ -473,6 +489,7 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
                 car_location = PITLANE[pitstop_info[driver_id]["pit_index"]]
                 next_location = PITLANE[min(pitstop_info[driver_id]["pit_index"] + 1, len(PITLANE) - 1)]
                 velocity = 60  # Fixed velocity during pitstop
+                print(f"Sending car data for driver {driver_id} during pitstop")
                 heart_rate = calculate_heart_rate(current_position, velocity, "pitstop", car_laps[driver_id])
             else:
                 car_location = COORDINATES[current_position]
@@ -504,7 +521,16 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
             leader_progress = progress[leader_id]
             leader_position = car_positions[leader_id]
 
-            velocities = {    driver_id: generate_velocity_for_sector(position_to_sector.get(car_positions[driver_id], "straight"))for driver_id in driver_ids}
+            elapsed_time = calculate_race_time(base_start_time)
+
+            velocities = {
+                driver_id: generate_velocity_for_sector(
+                    position_to_sector.get(car_positions[driver_id]), elapsed_time
+                )
+                for driver_id in driver_ids
+            }
+
+
             gaps = {
                 driver_id: calculate_time_gap(leader_progress, progress[driver_id], position_to_sector, velocities)
                 for driver_id in driver_ids
@@ -537,7 +563,7 @@ def simulate_real_time_race(producer, topic_raceflow, topic_cars, topic_race, to
             except Exception as e:
                 print(f"Error sending data: {e}")
 
-        time.sleep(0.5)  # Simulate real-time updates
+        time.sleep(0.1)  # Simulate real-time updates
 def wait_for_start_signal(broker, topic_start_race):
     consumer = KafkaConsumer(
         topic_start_race,

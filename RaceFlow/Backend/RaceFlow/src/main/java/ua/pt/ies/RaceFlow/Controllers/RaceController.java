@@ -12,15 +12,19 @@ import ua.pt.ies.RaceFlow.Services.RaceService;
 import ua.pt.ies.RaceFlow.Services.Events.RedFlagService;
 import ua.pt.ies.RaceFlow.Repositories.RaceRepository;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import ua.pt.ies.RaceFlow.Entities.Car;
 import static java.lang.Integer.MAX_VALUE;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,12 @@ public class RaceController {
 
     @Autowired
     private RedFlagService redFlagService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    private final Map<Integer, Double> lastFastestLaps = new HashMap<>();
+
 
     public RaceController(RaceService raceService, KafkaTemplate<String, String> kafkaTemplate) {
         this.raceService = raceService;
@@ -114,7 +124,6 @@ public class RaceController {
     }
 
     // Delete a race by ID    
-
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete race by ID", description = "Removes a race from the system by its unique ID")
     @Parameter(name = "id", description = "ID of the race to delete", required = true)
@@ -127,7 +136,6 @@ public class RaceController {
         return ResponseEntity.noContent().build();
     }
     
-    // Get the fastest lap of the race
     @GetMapping("/{id}/fastest-lap")
     @Operation(summary = "Get fastest lap of the race", description = "Fetches the fastest lap by going through all the cars")
     @Parameter(name = "id", description = "ID of the race to retrieve the fastest lap", required = true)
@@ -135,25 +143,42 @@ public class RaceController {
         @ApiResponse(responseCode = "200", description = "Fastest lap retrieved successfully"),
         @ApiResponse(responseCode = "404", description = "Race not found/ There are no laps")
     })
-    public ResponseEntity<Double> getFastestLap(@PathVariable Integer id) {
-        List<Car> cars = raceRepository.findById(id).get().getCars();
+    public ResponseEntity<Map<String, Object>> getFastestLap(@PathVariable Integer id) {
+        List<Car> cars = raceRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Race not found"))
+                .getCars();
+    
         if (cars.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        Double fastestLap = Double.MAX_VALUE;
-        for (Car car : cars) {
-            if (car.getLapTimes().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            for (Double lapTime : car.getLapTimes()) {
-                if (lapTime < fastestLap) {
-                    fastestLap = lapTime;
-                }
-            }
+    
+        Car carWithFastestLap = cars.stream()
+                .filter(car -> !car.getLapTimes().isEmpty())
+                .flatMap(car -> car.getLapTimes().stream().map(lapTime -> Map.entry(car, lapTime)))
+                .min(Map.Entry.comparingByValue(Double::compareTo))
+                .map(Map.Entry::getKey)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No lap times found"));
+    
+        Double fastestLap = carWithFastestLap.getLapTimes().stream().min(Double::compareTo).orElse(Double.MAX_VALUE);
+    
+        if (!fastestLap.equals(lastFastestLaps.getOrDefault(id, Double.MAX_VALUE))) {
+            lastFastestLaps.put(id, fastestLap);
+    
+            Map<String, Object> notification = Map.of(
+                "fastestLap", fastestLap,
+                "carId", carWithFastestLap.getId(),
+                "drivername", carWithFastestLap.getDriver().getName()
+            );
+            messagingTemplate.convertAndSend("/topic/fastest-lap-update", notification);
         }
-        return ResponseEntity.ok(fastestLap);
+    
+        Map<String, Object> response = new HashMap<>();
+        response.put("fastestLap", fastestLap);
+        response.put("carId", carWithFastestLap.getId());
+        return ResponseEntity.ok(response);
     }
     
+
 
 
     // endpoint to get the total nmber of laps of the race given its id

@@ -123,7 +123,6 @@ function DriverTable() {
                     <th scope="col">Pos</th>
                     <th scope="col">Driver</th>
                     <th scope="col">Tyre</th>
-                    <th scope="col">Battery</th>
                     <th scope="col">Gap</th>
                 </tr>
             </thead>
@@ -163,13 +162,12 @@ function DriverTable() {
 
 
                         <td>
+                        <Link to={`/car/${driver.id}`}>
+
                             <img src={tyreImages[cars[driver.id]?.tyreType] || soft} alt="Tyre" />
+                        </Link>
                         </td>
-                        <td className="driver-cell">
-                            <Link to={`/car/${driver.id}`}>
-                                {driver.battery || "100%"}
-                            </Link>
-                        </td>
+
                         <td>{driver.gap || "+0.000"} s</td>
                     </tr>
                 ))}

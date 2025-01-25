@@ -228,12 +228,12 @@ const CarDetails = () => {
                                         ? `${car.tyreTemp[3].toFixed(2)}°`
                                         : "N/A"}
                                 </div>
-                                <div
+                                {/* <div
                                     className="bpm-bubble"
                                     style={{ backgroundColor: car.teamColor || "#d32f2f" }}
                                 >
                                     {driver?.heartRate || "N/A"} bpm
-                                </div>
+                                </div> */}
                             </div>
                             <div className="info-column">
                                 <div className="top-info">
@@ -246,12 +246,6 @@ const CarDetails = () => {
                                         <p>
                                             {car.currentLap} / {totalLaps}
                                         </p>
-                                        <div
-                                            style={{ backgroundColor: `#${car.teamColor || "d32f2f"}` }}
-                                        >
-                                            <h4>⏱ Fastest Lap</h4>
-                                        </div>
-                                        <p>{car.fastestLap || "N/A"}</p>
                                     </div>
                                 </div>
                                 <div className="details-panel">
@@ -271,28 +265,7 @@ const CarDetails = () => {
                                         <p>{car.rpm || "N/A"} rpm</p>
                                     </div>
                                 </div>
-                                <div className="events-panel">
-                                    <h3>Events ({events.length})</h3>
-                                    {events.map((event) => (
-                                        <div key={event.id} className="event-item">
-                                            <div
-                                                className={`event-icon ${event.iconClass}`}
-                                                style={{
-                                                    backgroundImage: event.iconClass.includes("pitstop") 
-                                                        ? `url(${pitstopIcon})` 
-                                                        : "none",
-                                                    backgroundSize: "contain",
-                                                    backgroundRepeat: "no-repeat",
-                                                    backgroundPosition: "center",
-                                                }}
-                                            ></div>
-                                            <div className="event-info">
-                                                <p className="event-title">{event.title}</p>
-                                                <p className="event-details">{event.details}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+
                             </div>
                         </div>
                     </div>

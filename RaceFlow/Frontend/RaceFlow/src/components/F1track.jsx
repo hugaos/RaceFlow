@@ -13,14 +13,14 @@ const F1Track = () => {
   const [currentLap, setCurrentLap] = useState(0);
   const [totalLaps, setTotalLaps] = useState(0);
   const [cars, setCars] = useState([]);
-  const [events, setEvents] = useState([]); // Fila de eventos
-  const interval = useRef(null); 
-  const interval2 = useRef(null); 
+  const [events, setEvents] = useState([]); 
+  const interval = useRef(null);
+  const interval2 = useRef(null);
   const carsRef = useRef(cars);
   const [currentRaceId, setCurrentRaceId] = useState(null);
   const [fastestCar, setFastestCar] = useState(null);
   const [driverName, setDriverName] = useState(null);
-
+  const [currentRace, setCurrentRace] = useState(null);
   const [raceStatus, setRaceStatus] = useState(false);
 
   useEffect(() => {
@@ -28,7 +28,6 @@ const F1Track = () => {
     localStorage.removeItem("currentRaceId");
   }, [currentRaceId]);
 
-  // Novos estados para weather e trackTemperature
   const [weather, setWeather] = useState(null);
   const [trackTemperature, setTrackTemperature] = useState(null);
 
@@ -54,48 +53,69 @@ const F1Track = () => {
   useEffect(() => {
     carsRef.current = cars;
   }, [cars]);
+  useEffect(() => {
+    const fetchRace = async () => {
+      try {
+          const response = await fetch("http://localhost:8080/api/races", {
+              headers: { Authorization: `Bearer ${token}` },
+          });
 
+          if (response.ok) {
+              const racesData = await response.json();
+              if (racesData.length > 0) {
+                  console.log("Fetched Race:", racesData[0]);
+                  setCurrentRace(racesData[0]); // Configura a primeira corrida
+              } else {
+                  setCurrentRace(null); // Nenhuma corrida disponível
+              }
+          } else {
+              console.error("Error fetching race:", response.statusText);
+              setCurrentRace(null);
+          }
+      } catch (error) {
+          console.error("Error fetching race:", error);
+          setCurrentRace(null);
+      }
+  };
+
+  fetchRace();
+  });
   const updateEvents = (newEvent) => {
 
     setEvents((prevEvents) => {
-      // Check if the event with the same ID already exists to prevent duplicates
       if (prevEvents.some(event => event.id === newEvent.id)) {
-        return prevEvents; // Don't add the event if it's already in the list
+        return prevEvents; 
       }
   
       const storedEvents = localStorage.getItem("events");
       const parsedEvents = storedEvents && storedEvents !== "null" ? JSON.parse(storedEvents) : [];
-  
+
       const updatedEvents = [newEvent, ...parsedEvents];
-  
+
       if (updatedEvents.length > 4) {
-        updatedEvents.shift(); // Remove the oldest event if there are more than 4
+        updatedEvents.shift(); 
       }
-  
-      // Remove the "isNew" state after 5 seconds to end the animation
+
       setTimeout(() => {
         setEvents((currentEvents) =>
           currentEvents.map((event) =>
             event.id === newEvent.id ? { ...event, isNew: false } : event
           )
         );
-      }, 5000); // 5 seconds animation duration
-  
-      // Remove the event after 15 seconds
+      }, 5000); 
       setTimeout(() => {
         setEvents((currentEvents) => {
           const updatedEvents = currentEvents.filter((event) => event.id !== newEvent.id);
-  
-          // Update localStorage to reflect the list without the removed event
+
           localStorage.setItem("events", JSON.stringify(updatedEvents));
-          
-          return updatedEvents; // Return the updated events
+
+          return updatedEvents; 
         });
-      }, 15000); // 15 seconds before removal
-  
-      // Save the updated events to localStorage
+      }, 30000); 
+
+
+
       localStorage.setItem("events", JSON.stringify(updatedEvents));
-  
       return updatedEvents;
     });
   };
@@ -120,6 +140,7 @@ const F1Track = () => {
       setEvents(JSON.parse(storedEvents));
 
     }
+    
   }, []);
 
 
@@ -131,7 +152,7 @@ const F1Track = () => {
       if (car.id === updatedCar.carID) {
         return { ...car, ...updatedCar };
       }
-      return car; // Certifique-se de retornar o carro original quando não corresponde
+      return car; 
     });
     console.log(updatedCars);
     setCars(updatedCars);
@@ -164,7 +185,7 @@ const F1Track = () => {
   useEffect(() => {
     const fetchRaceStatus = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/races/1/running", { method: "GET" });
+        const response = await fetch("http://localhost:8080/api/races/${currentRace.id}/running", { method: "GET" });
         if (response.ok) {
           const fetchRaceStatus = await response.json();
   
@@ -213,26 +234,44 @@ const F1Track = () => {
   
 
   useEffect(() => {
-    // Fetch initial cars data
     const fetchCars = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/cars", { method: "GET" });
         if (response.ok) {
           const data = await response.json();
           console.log("Initial cars data:", data);
-          transformers = data.map((car) => ({
+
+          const transformedCars = data.map((car) => ({
             ...car,
-            location: car.location.map((coord) => parseFloat(coord)) // Ensure location is an array of numbers
+            location: car.location.map((coord) => parseFloat(coord)) 
           }));
-          setCars(data.map((car) => ({
-            ...car,
-            location: car.location.map((coord) => parseFloat(coord)) // Ensure location is an array of numbers
-          })));
+
+          setCars(transformedCars);
+
+          let fastestLapFound = Number.MAX_VALUE; 
+          let carWithFastestLap = null;
+
+          for (let i = 0; i < transformedCars.length; i++) {
+            const driverFastestLap = transformedCars[i]?.driver?.fastest_lap;
+            if (driverFastestLap && driverFastestLap < fastestLapFound) {
+              fastestLapFound = driverFastestLap;
+              carWithFastestLap = transformedCars[i];
+              setDriverName(carWithFastestLap.driver.name);
+            }
+          }
+
+          if (carWithFastestLap) {
+            setFastestLap(fastestLapFound);
+            console.log("Fastest Lap Car:", carWithFastestLap);
+          }
+        } else {
+          console.error("Failed to fetch cars:", response.statusText);
         }
       } catch (error) {
         console.error("Error fetching cars:", error);
       }
     };
+
 
     fetchCars();
     const interval = setInterval(() => {
@@ -259,14 +298,9 @@ const F1Track = () => {
       stompClient.subscribe("/topic/cars", (message) => {
         const updatedCar = JSON.parse(message.body);
         console.log("Received WebSocket update:", updatedCar);
-        // updateCarData(updatedCar); // Update car data with the incoming update if desired
       });
 
-      // stompClient.subscribe("/topic/fastest-lap-update", (message) => {
-      //   const data = JSON.parse(message.body);
-      //   console.log("Fastest Lap Update:", data);
-      //   setFastestLap({ fastestLap: data.fastestLap, carId: data.carId });
-      // });
+
 
       stompClient.subscribe("/topic/race", (message) => {
         const raceData = JSON.parse(message.body);
@@ -275,7 +309,6 @@ const F1Track = () => {
           currentLap_ = raceData.currentLap;
         }
 
-        // Update weather and trackTemperature if present in raceData
         if (raceData.weather) {
           setWeather(raceData.weather);
         }
@@ -287,9 +320,8 @@ const F1Track = () => {
 
       stompClient.subscribe("/topic/pitstop", (message) => {
         const pitstopData = JSON.parse(message.body);
-        console.log("Received PITSTOP WebSocket update:", pitstopData); // Log the pitstop data
+        console.log("Received PITSTOP WebSocket update:", pitstopData);
 
-        // Check if the event already exists to avoid adding duplicates
         const driverId = pitstopData.driverId;
         const driver = carsRef.current.find((car) => car.id === driverId);
         const driverName = driver && driver.driver ? driver.driver.name : "Unknown";
@@ -298,20 +330,18 @@ const F1Track = () => {
         const formattedDuration = formatDuration(pitstopData.duration);
 
         const pitstopEvent = {
-          id: Date.now(), // Using the current timestamp as the unique ID
+          id: Date.now(), 
           iconClass: "event-icon pitstop",
           title: "Pit Stop",
           details: `Driver ${driverName} (#${driverNumber || "?"}), Duration: ${formattedDuration}, Lap: ${pitstopData.lap || "?"}, Tyre: ${pitstopData.new_tyre || "?"}`,
           backgroundColor: `#${driverTeamColour}`
         };
 
-        // Only add the event if it doesn't exist
         updateEvents(pitstopEvent);
- 
+
       });
 
 
-      // Helper function to format ISO 8601 duration (e.g., PT28S -> 28s)
       function formatDuration(duration) {
         if (!duration) return "Unknown";
         const match = duration.match(/PT(\d+)S/);
@@ -329,7 +359,7 @@ const F1Track = () => {
       }
       clearInterval(interval);
     };
-  }, []); // Ensure that the `cars` state is used here to get updated driver names
+  }, []); 
 
 
   useEffect(() => {
@@ -341,12 +371,9 @@ const F1Track = () => {
     [-80.2365135, 25.95831925],
     [-80.235374, 25.957669]];
 
-    // Clear the canvas before drawing
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    const padding = 20; // Padding around the canvas
-
-    // Projection to transform GeoJSON coordinates into pixels
+    const padding = 20; 
     const projection = d3.geoMercator()
       .fitExtent(
         [
@@ -358,29 +385,25 @@ const F1Track = () => {
 
     const pathGenerator = d3.geoPath(projection, context);
 
-    // Draw the track
     geojson.features.forEach((feature) => {
       context.beginPath();
-      pathGenerator(feature); // Draw the geometry
+      pathGenerator(feature); 
 
-      // Outline the track with a light grey color
-      context.lineWidth = 4; // Outline thickness
-      context.strokeStyle = "#b0b0b0"; // Light grey outline color
-      context.stroke(); // Draw the outline of the track path
+      context.lineWidth = 4; 
+      context.strokeStyle = "#b0b0b0"; 
+      context.stroke(); 
     });
 
-    // Draw the pit lane
     context.beginPath();
     const pitLanePath = PitLane.map((coord) => projection(coord));
     context.moveTo(pitLanePath[0][0], pitLanePath[0][1]);
     pitLanePath.slice(1).forEach((coord) => context.lineTo(coord[0], coord[1]));
-    context.lineWidth = 4; // Outline thickness
-    context.strokeStyle = "#b0b0b0"; // Black outline color
-    context.stroke(); // Draw the outline of the pit lane path
+    context.lineWidth = 4; 
+    context.strokeStyle = "#b0b0b0";
+    context.stroke(); 
 
     const startLine = [-80.237228, 25.9590515]
 
-    // Make a point on the start line and turn it into a rectangle and rotate it 35 degrees to the right
     const startLinePoint = projection(startLine);
     context.save();
     context.translate(startLinePoint[0], startLinePoint[1]);
@@ -390,7 +413,6 @@ const F1Track = () => {
     context.restore();
 
 
-    // Draw cars on the track
     cars.forEach((car) => {
       const [lon, lat] = car.location;
       const projected = projection([lon, lat]);
@@ -398,13 +420,11 @@ const F1Track = () => {
       if (projected) {
         const [carX, carY] = projected;
 
-        // Draw the circle representing the car
         context.beginPath();
         context.arc(carX, carY, 7, 0, 2 * Math.PI);
         context.fillStyle = car.teamColor ? "#" + car.teamColor : "#000";
         context.fill();
 
-        // Draw the driver number inside the circle
         context.fillStyle = "#000";
         context.font = "10px Arial";
         context.textAlign = "center";
@@ -424,9 +444,9 @@ const F1Track = () => {
       if (response.ok) {
         const races = await response.json();
         if (races.length > 0) {
-          const firstRace = races[0]; // Pega a primeira corrida da lista
+          const firstRace = races[0]; 
           console.log("Total Laps:", firstRace.totalLaps);
-          setTotalLaps(firstRace.totalLaps); // Atualiza o estado com o total de voltas
+          setTotalLaps(firstRace.totalLaps); 
 
           // Atualiza weather e trackTemperature se existirem
           if (firstRace.weather) {
@@ -488,33 +508,33 @@ const F1Track = () => {
 
 
       {events.length > 0 && (
-      <div className="eventos">
-        <div className="event-header">
-          <span>EVENTS</span>
-        </div>
-        {events.map((evento) => (
-          <div key={evento.id} className="event-item">
-            <div
-              className={`event-icon ${evento.iconClass}`}
-              style={{
-                backgroundImage: evento.iconClass.includes("pitstop")
-                  ? `url(${pitstopIcon})`
-                  : "none",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundColor: evento.backgroundColor,
-              }}
-            ></div>
-            <div className="event-info">
-              <p className="event-title">{evento.title}</p>
-              <p className="event-details">{evento.details}</p>
-            </div>
+        <div className="eventos">
+          <div className="event-header">
+            <span>EVENTS</span>
           </div>
-        ))}
-      </div>
-    )}
-      
+          {events.map((evento) => (
+            <div key={evento.id} className="event-item">
+              <div
+                className={`event-icon ${evento.iconClass}`}
+                style={{
+                  backgroundImage: evento.iconClass.includes("pitstop")
+                    ? `url(${pitstopIcon})`
+                    : "none",
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  backgroundColor: evento.backgroundColor,
+                }}
+              ></div>
+              <div className="event-info">
+                <p className="event-title">{evento.title}</p>
+                <p className="event-details">{evento.details}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
     </div>
   );
 };
