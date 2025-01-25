@@ -12,4 +12,9 @@ RaceFlow is a race performance analysis tool for Formula 1 cars. It keeps a cons
 | Architect     | Hugo Sousa     | 112733
 | DevOps Master | João Varela    | 113780
 
+## Contributors
+- [Pedro Salgado](https://github.com/TKahk)
+- [Carolina Prata](https://github.com/carolmprata)
+- [Hugo Sousa](https://github.com/hugaos)
+
 ## Grade - 18 
