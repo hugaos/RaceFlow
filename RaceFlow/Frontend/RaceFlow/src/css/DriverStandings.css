@@ -1,0 +1,129 @@
+
+.header{
+  font-family: 'F1Font', sans-serif;
+}
+
+/* Página de carregamento */
+.loading-page {
+  background-color: #1a1a1a; /* Fundo consistente */
+  color: #f5f5f5; /* Cor do texto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  height: 100vh; /* Full screen height */
+}
+
+/* Página principal */
+.driver-standings-page {
+  background-color: #1a1a1a; /* Fundo principal */
+  color: #f5f5f5; /* Texto principal */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Aligns content to the top */
+  min-height: 100vh; /* Ensures the page height covers the viewport */
+  padding-top: 60px; /* Accounts for fixed navbar height */
+}
+
+/* Container principal */
+.driver-standings-container {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+  background-color: #222222; /* Fundo mais escuro */
+  color: #f5f5f5; /* Texto principal */
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.6); /* Sombra */
+  overflow: auto; /* Ensure it can scroll if content overflows */
+  margin-bottom: 40px; /* Prevent the bottom cut off */
+}
+
+/* Tabela */
+.driver-standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: 'F1Font', sans-serif;
+  color: #f5f5f5; /* Texto principal */
+  border: 1px solid #444444; /* Bordas */
+  border-radius: 10px;
+  /* Removed internal scrolling, let the page scroll instead */
+}
+
+/* Cabeçalho */
+.driver-standings-table thead {
+  background-color: #333333; /* Navbar */
+  color: #ffffff; /* Branco gelo */
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.driver-standings-table th {
+  border: 1px solid #444444; /* Bordas */
+  padding: 12px;
+  text-align: center;
+  min-width: 120px; /* Ensures the columns don't shrink too much */
+}
+
+/* Linhas alternadas */
+.driver-standings-table tbody tr:nth-child(even) {
+  background-color: #2a2a2a; /* Alternância de linhas */
+}
+
+.driver-standings-table tbody tr:nth-child(odd) {
+  background-color: #1a1a1a; /* Alternância de linhas */
+}
+
+/* Células */
+.driver-standings-table td {
+  border: 1px solid #444444; /* Bordas */
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  min-width: 120px; /* Ensures that the cells maintain their size */
+}
+
+/* Hover */
+.driver-standings-table tbody tr:hover {
+  background-color: #454040;
+  color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Indicador de cor da equipe */
+.team-colour-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Links */
+.driver-standings-container a {
+  color: #f5f5f5; /* Texto principal */
+  text-decoration: none;
+}
+
+.driver-standings-container a:hover {
+  color: #e0e0e0; /* Tom mais claro */
+  text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .driver-standings-container {
+    padding: 15px;
+  }
+
+  .driver-standings-table th,
+  .driver-standings-table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+}
+

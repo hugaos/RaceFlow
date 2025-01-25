@@ -1,0 +1,141 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 7vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #202020;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  color: #f5f5f5;
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 100%;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #5d3c82;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+      align-items: center;
+}
+
+.nav-links a {
+  color: #f5f5f5;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'F1Font', sans-serif;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links .active-link {
+  background-color: #5d3c82;
+  color: #202020;
+}
+
+
+.container {
+  padding-top: 20px; /* Add spacing for the content below */
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Ajusta o alinhamento horizontal */
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espaçamento entre o texto e o ícone */
+  text-decoration: none;
+}
+
+.logo-text {
+  font-size: 2rem; /* Slightly larger for readability */
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  font-family: 'F1Font', sans-serif;
+  letter-spacing: 1px; /* A little spacing for a cleaner look */
+  
+  /* Subtle text-shadow for depth */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
+  /* Smooth transition for color change on hover */
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.logo-text:hover {
+  /* Hover effect: text color changes smoothly slighly darker white */
+  color: #f5f5f5;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+
+.logo-icon svg {
+  width: 24px; /* Mesmo tamanho que o texto */
+  height: 24px;
+  fill: #5d3c82; /* Cor do ícone */
+}
+/* Botão de login */
+.nav-links .login-button {
+  color: white;
+  background-color: #5d3c82;
+  font-size: 1rem;
+  font-weight: bold;
+  /* Cor do botão */
+  border-radius: 20px;
+  /* Torna o botão arredondado */
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+
+}
+
+.nav-links .login-button:hover {
+  background-color: #5d3c82;
+
+  color: white;
+  
+  transform: scale(1.1);
+  
+}

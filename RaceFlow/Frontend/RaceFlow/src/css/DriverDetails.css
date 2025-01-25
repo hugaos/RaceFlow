@@ -1,0 +1,200 @@
+.driver-details-page {
+    background-color: #1a1a1a; /* Cor de fundo para a página */
+    color: #f5f5f5; /* Texto principal */
+    min-height: 100vh; /* Garante que ocupa a altura total da janela */
+    padding-top: 7vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+/* Container principal */
+.driver-details-container {
+    font-family: Arial, sans-serif;
+    color: #f5f5f5;
+    background-color: #1a1a1a;
+    padding: 40px; /* Adiciona espaço ao redor */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente */
+    gap: 20px;
+}
+
+.driver-details-container table {
+    font-family: 'F1Font', sans-serif;
+}
+
+/* Cabeçalho do driver */
+.driver-header {
+    display: flex;
+    align-items: center;
+    gap: 40px; /* Aumenta o espaçamento entre a imagem e o texto */
+    margin-bottom: 40px;
+    font-family: 'F1Font', sans-serif;
+}
+
+.driver-photo {
+    width: 200px; /* Aumentei o tamanho da imagem */
+    height: 200px;
+    border-radius: 50%;
+    border: 5px solid;
+}
+
+.driver-info {
+    font-family: 'F1Font', sans-serif;
+}
+
+.driver-info h1 {
+    font-size: 32px; /* Aumentei o tamanho do título */
+    margin: 0;
+    color: #f5f5f5;
+}
+
+.driver-info h3 {
+    font-size: 24px; /* Texto maior */
+    margin: 5px 0 0;
+    color: #cfcfcf;
+}
+
+/* Corpo principal */
+.driver-body {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px; /* Espaçamento maior entre os lados esquerdo e direito */
+    width: 100%;
+    max-width: 1200px; /* Limita a largura máxima */
+}
+
+/* Detalhes à esquerda */
+.details-left {
+    flex: 1; /* Ocupa o espaço proporcional */
+}
+
+.details-left table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.details-left td {
+    padding: 15px; /* Aumentei o padding */
+    border-bottom: 1px solid #444444;
+    color: #f5f5f5;
+    font-size: 18px; /* Tamanho do texto maior */
+}
+
+.details-left tr td:first-child {
+    font-weight: bold;
+}
+
+/* Estatísticas à direita */
+.details-right {
+    flex: 0.5; /* Menor que o lado esquerdo */
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espaçamento maior entre os blocos */
+}
+
+.stat-box {
+    background-color: #333333;
+    padding: 20px; /* Padding maior */
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid #444444;
+}
+
+.stat-box h3 {
+    font-size: 20px;
+    margin: 0;
+    color: #f5f5f5;
+    font-family: 'F1Font', sans-serif;
+}
+
+.stat-box p {
+    font-size: 32px; /* Tamanho maior para o número */
+    font-weight: bold;
+    margin: 10px 0 0;
+}
+
+.stat-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stat-box ul li {
+    font-size: 22px; /* Texto maior para os últimos placements */
+    margin: 10px 0;
+    color: #f5f5f5;
+    font-family: 'F1Font', sans-serif;
+}
+
+/* Section containing the chart and lap statistics */
+.driver-chart-section {
+    display: flex;
+    gap: 40px; /* Consistent gap between chart and stats */
+    justify-content: center; /* Centers the elements horizontally */
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px; /* Ensures content doesn't stretch too wide */
+}
+
+/* Chart container */
+.driver-chart {
+    flex: 2; /* Occupies more space than the stats box */
+    background-color: #333333; /* Matches the stat-box background */
+    padding: 20px; /* Add spacing around the chart */
+    border-radius: 8px;
+    border: 2px solid #444444; /* Border for visual separation */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+/* Title for the chart */
+.driver-chart h2 {
+    font-size: 24px; /* Larger font size for the title */
+    margin-bottom: 20px;
+    color: #f5f5f5;
+    font-family: 'F1Font', sans-serif;
+    text-align: center;
+}
+
+/* Lap statistics box */
+.lap-stats {
+    flex: 1; /* Smaller size compared to the chart */
+    background-color: #333333; /* Matches the dark theme */
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #444444; /* Border for separation */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    text-align: center; /* Center-align the content */
+}
+
+/* Title for the lap stats */
+.lap-stats h3 {
+    font-size: 22px; /* Slightly larger font */
+    margin-bottom: 15px;
+    color: #f5f5f5;
+    font-family: 'F1Font', sans-serif;
+}
+
+/* Text in the lap stats */
+.lap-stats p {
+    font-size: 18px; /* Readable text size */
+    margin: 5px 0;
+    color: #cfcfcf; /* Slightly lighter text color */
+}
+
+/* Highlight for fastest and average lap values */
+.lap-stats p strong {
+    color: #f5f5f5; /* Stands out against the dark background */
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .driver-chart-section {
+        flex-direction: column; /* Stack chart and stats vertically */
+        gap: 20px; /* Adjust gap for smaller screens */
+    }
+
+    .driver-chart, .lap-stats {
+        flex: 1; /* Equal width for both sections */
+    }
+}

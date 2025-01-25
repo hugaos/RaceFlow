@@ -1,0 +1,266 @@
+@font-face {
+    font-family: 'F1Font';
+    src : url('../assets/F1font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Remove horizontal scroll from body */
+    background-color: #1a1a1a
+}
+
+.event-icon.red-flag {
+    background-color: #ff0000; /* Red background */
+    color: white;
+  }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 60px;
+    background: linear-gradient(to bottom, #151737, #3e4482);
+    height: 100vh;
+    overflow: hidden; /* Prevent scroll on container */
+}
+
+.row {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent scroll on row */
+}
+
+.table-column {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 90%;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent scroll on table-column */
+    flex-shrink: 1; /* Ensure it shrinks if necessary */
+}
+
+.track-col {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%;
+    padding-left: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent scroll on track-col */
+    flex-shrink: 1; /* Ensure it shrinks if necessary */
+}
+
+.track-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #232545;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent scroll within track-container */
+}
+
+.track-canvas {
+    position: absolute;
+    width: 70%;
+    height: 90%;
+    margin-left: 3%;
+    flex: 1;
+}
+
+.quadrado {
+    position: relative;
+    width: 98%;
+    height: 90%;
+    margin-left: 3%;
+    margin-right: 5%;
+    margin-top: 0;
+    background-color: rgba(67, 67, 79, 0.7); /* Removed quotes */
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden; /* Prevent scroll within quadrado */
+}
+
+.eventos {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    width: 260px;
+    background: linear-gradient(to bottom, #2c2c54, #474787);
+    color: white;
+    padding: 15px 10px;
+    box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-right: 30px;
+    height: auto; /* Altura flexível */
+}
+
+.event-header {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "F1Font", sans-serif;
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 10px; /* Espaço abaixo do header */
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    padding: 10px 5px;
+    margin: 4px 0; /* Maior espaço entre itens */
+    background-color: #3c3c5c; /* Cor levemente mais clara */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.event-item:hover {
+    background-color: #505070; /* Cor mais clara ao passar o mouse */
+    transform: scale(1.02); /* Pequeno efeito de zoom */
+}
+
+.event-icon {
+    width: 50px; /* Define o tamanho desejado */
+    height: 50px;
+    background-size: contain; /* Ajusta o tamanho da imagem ao contêiner */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    background-position: center;
+    border-radius: 0; /* Remove o arredondamento */
+    background-color: transparent; /* Fundo transparente */
+  }
+  
+
+.event-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Garante que ocupa o espaço restante */
+}
+
+.event-title {
+    font-weight: bold;
+    font-size: 14px;
+    font-family: "F1Font", sans-serif;
+    color: #fff;
+    margin-bottom: 2px; /* Espaço entre título e detalhes */
+}
+
+.event-details {
+    font-size: 12px;
+    color: #ddd; /* Cor cinza claro */
+    font-family: "F1Font", sans-serif;
+}
+
+
+.fastest-lap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 230px;
+    background-color: #5d3c82;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-top: 30px;
+    margin-left: auto;
+    margin-bottom: auto;
+    margin-right: 30px;
+    font-family: 'F1Font', sans-serif;
+}
+
+.fastest-lap-icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.fastest-lap-info {
+    flex: 1;
+    text-align: left;
+    font-family: 'F1Font', sans-serif;
+}
+
+.fastest-lap-title {
+    font-size: 14px;
+    margin: 0;
+    font-family: 'F1Font', sans-serif;
+}
+
+.fastest-lap-time {
+    font-size: 16px;
+    margin: 0;
+}
+
+.top-left-icons {
+    position: absolute;
+    top: 10px; 
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; 
+}
+
+.icon-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover; 
+    cursor: pointer; 
+}
+
+.lap-text {
+    font-size: 1.25rem;
+    font-family: 'F1Font', sans-serif;
+    color: white;
+
+  }
+  
+  .lap-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .lap-progress {
+    height: 100%;
+    background: #27ae60;
+    transition: width 0.5s ease;
+  }
+
+.event-icon.pitstop {
+    background-color: white;
+    background-image: url('path-to-pitstop-icon.png'); /* Substitui com o caminho correto */
+    background-size: cover;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+  

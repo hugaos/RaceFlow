@@ -1,0 +1,123 @@
+/* Import custom font */
+@font-face {
+    font-family: 'F1Font';
+    src: url('../assets/fonts/f1font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* General Table Styling */
+.table {
+    width: 100%; /* Full width */
+    border-collapse: collapse;
+    text-align: center;
+    overflow: hidden;
+    font-family: 'F1Font', sans-serif; /* Apply F1Font */
+    font-size: 14px; /* Smaller font size */
+    background-color: #1a1a1a;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+    height: 100vh; /* 90% of the viewport height */
+}
+
+/* Header Styling */
+.tabel-head {
+    background-color: #222831;
+    color: #f5f5f5;
+    font-weight: bold;
+    font-size: 14px; /* Smaller font size */
+    text-transform: uppercase; /* Uppercase for a clean F1 aesthetic */
+    letter-spacing: 1px; /* Add spacing for a modern look */
+}
+
+/* Border styling for header cells */
+.tabel-head th {
+    padding: 6px; /* Reduced padding */
+    border: none;
+}
+
+/* Row Styling */
+.row-class-1 {
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+.row-class-2 {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+/* Add hover effect */
+.table tbody tr:hover {
+    background-color: #444444;
+    transform: scale(1.01); /* Slight zoom effect */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Cell Styling */
+.tab td {
+    padding: 6px; /* Reduced padding */
+    text-align: center;
+    border-bottom: 1px solid #495057;
+    vertical-align: middle; /* Center content vertically */
+}
+
+/* Team Color Indicator */
+.team-colour-indicator {
+    width: 30px; /* Largura maior */
+    height: 30px; /* Altura maior */
+    border-radius: 50%; /* Mantém a forma circular */
+    background-color: #444444;
+    margin-right: 10px; /* Ajusta o espaçamento */
+    display: flex; /* Usa flexbox para centralizar conteúdo */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    font-size: 14px; /* Ajusta o tamanho do texto */
+    color: white; /* Contraste do texto */
+    font-weight: bold; /* Deixa o número mais visível */
+}
+
+
+/* Driver Cell */
+.driver-cell {
+    text-decoration: none;
+}
+
+.driver-cell a {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.driver-cell a:hover {
+    color: #e63946; /* Highlight color on hover */
+    text-decoration: underline;
+}
+
+/* Tyre Image */
+.tab td img {
+    width: 20px; /* Reduced width */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .table {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .tabel-head th {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .tab td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .team-colour-indicator {
+        width: 6px;
+        height: 13px;
+    }
+}

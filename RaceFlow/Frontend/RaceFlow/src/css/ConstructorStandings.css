@@ -1,0 +1,98 @@
+/* Página principal */
+.constructor-standings-page {
+  background-color: #1a1a1a; /* Cor de fundo */
+  color: #f5f5f5; /* Cor do texto */
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'F1Font', sans-serif;
+  overflow: hidden; /* Remove scrolling */
+}
+
+/* Container */
+.constructor-standings-container {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+  background-color: #222222; /* Fundo mais escuro */
+  color: #f5f5f5; /* Texto principal */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.6); /* Sombra */
+  vertical-align: middle;
+}
+
+/* Tabela */
+.constructor-standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: 'F1Font', sans-serif;
+  color: #f5f5f5; /* Texto principal */
+  border: 1px solid #444444;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+.constructor-standings-table thead {
+  background-color: #333333; /* Cor de fundo */
+  color: #ffffff; /* Texto branco */
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.constructor-standings-table th {
+  border: 1px solid #444444; /* Bordas */
+  padding: 12px;
+  text-align: center;
+}
+
+/* Linhas alternadas */
+.constructor-standings-table tbody tr:nth-child(even) {
+  background-color: #2a2a2a;
+}
+
+.constructor-standings-table tbody tr:nth-child(odd) {
+  background-color: #1a1a1a;
+}
+
+/* Células */
+.constructor-standings-table td {
+  border: 1px solid #444444; /* Bordas */
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Hover */
+.constructor-standings-table tbody tr:hover {
+  background-color: #454040;
+  color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Team color */
+.team-color {
+  width: 8px; /* Reduced width */
+  height: 20px; /* Reduced height */
+  border-radius: 5px;
+  margin-right: 5px; /* Reduced margin */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .constructor-standings-container {
+    padding: 15px;
+  }
+
+  .constructor-standings-table th,
+  .constructor-standings-table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+}

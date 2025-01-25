@@ -1,0 +1,130 @@
+/* LoginPage.css */
+
+/* General page styling */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #151737, #3e4482);
+    color: #ffffff;
+    font-family: 'F1Font', sans-serif;
+}
+
+/* Login form container */
+.login-form {
+    background: #202020;
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    width: 320px;
+    color: #ffffff;
+}
+
+.login-form h2 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #dcdcdc;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+}
+
+.form-group input:focus {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.error-message {
+    font-size: 14px;
+    color: #ff4d4d;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.login-button,
+.guest-button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: #5d3c82;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.guest-button {
+    background: #6c757d;
+}
+
+.login-button:hover,
+.guest-button:hover {
+    background: #703fb0;
+    transform: scale(1.02);
+}
+
+.login-button:active,
+.guest-button:active {
+    transform: scale(0.98);
+}
+
+/* Add subtle animation to form */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-form {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .login-form {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .login-form h2 {
+        font-size: 24px;
+    }
+
+    .form-group input {
+        font-size: 13px;
+    }
+}
